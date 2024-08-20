@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { loginUser } from './services/loginUser';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     const result = await loginUser(email, password);
     setMessage(result.message);
     if (result.success) {
-      // Handle successful login (e.g., store token, redirect)
+      navigate('/home'); // Redirect to home on successful login
     }
   };
 
@@ -40,4 +42,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Login; // Correct export statement
