@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './App.css';
+import { registerUser } from './services/registerUser'; // Import the function
 
 function App() {
   const [email, setEmail] = useState('');
@@ -9,25 +9,12 @@ function App() {
   const handleRegister = async (e) => {
     e.preventDefault(); // Prevent page refresh
 
-    try {
-      const res = await fetch('http://localhost:3000/api/users/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+    const result = await registerUser(email, password); // Call the function
 
-      const data = await res.json();
-
-      if (res.status === 201) {
-        setResponseMessage(data.message);
-      } else {
-        setResponseMessage(data.error);
-      }
-
-    } catch (error) {
-      setResponseMessage('Error: Could not register user');
+    if (result.success) {
+      setResponseMessage(result.message);
+    } else {
+      setResponseMessage(result.message);
     }
   };
 
