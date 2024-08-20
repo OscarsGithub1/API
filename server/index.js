@@ -4,7 +4,7 @@ const express = require('express');
 const connectedDB = require('./db.js');
 const itemModel = require('./models/items.js');
 const cors = require('cors');
-
+const userRoutes = require('./routes/userRoutes.js');
 
 const app = express();
 app.use(express.json());
@@ -15,6 +15,9 @@ app.get('/', async (req, res) => {
 const items = await itemModel.find();
 res.json(items);
 })
+
+app.use('/api/users', userRoutes);
+
 app.listen(3000, () => {
     console.log("app is running");
 });

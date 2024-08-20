@@ -1,33 +1,64 @@
-import { useEffect, useState } from 'react'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
 
 function App() {
-  const [items, setItems] = useState([]);
-useEffect( () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [responseMessage, setResponseMessage] = useState('');
 
-  const fetchData = async () => {
-    const res = await fetch('http://localhost:3000');
-    const data = await res.json();
-   // console.log(data);
-    console.log("data.items", data.items);
-    console.log("data.name",  data.name);
-    console.log("data", data);
-    console.log("items", items);
-    setItems(data);
-   
-  }
+  const handleRegister = async (e) => {
+    e.preventDefault(); // Prevent page refresh
 
-  fetchData();
+    try {
+      const res = await fetch('http://localhost:3000/api/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-}, [])  
+      const data = await res.json();
+
+      if (res.status === 201) {
+        setResponseMessage(data.message);
+      } else {
+        setResponseMessage(data.error);
+      }
+
+    } catch (error) {
+      setResponseMessage('Error: Could not register user');
+    }
+  };
+
   return (
- <>
- {items.map(i => (
-  <p>{i.name}, {i.description}</p>
- ))}
- 
- </>
-  )
+    <div className="App">
+      <h1>Register</h1>
+      <form onSubmit={handleRegister}>
+        <div>
+          <label>Email:</label>
+          <input 
+            type="email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            required 
+          />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input 
+            type="password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+            required 
+          />
+        </div>
+        <button type="submit">Register</button>
+      </form>
+
+      {responseMessage && <p>{responseMessage}</p>}
+    </div>
+  );
 }
 
-export default App
+export default App;
