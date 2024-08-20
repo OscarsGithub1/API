@@ -1,49 +1,41 @@
-import { useState } from 'react';
-import { registerUser } from './services/registerUser'; // Import the function
+import React, { useState } from 'react';
+import { registerUser } from './services/registerUser';
 
 function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [responseMessage, setResponseMessage] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleRegister = async (e) => {
-    e.preventDefault(); // Prevent page refresh
-
-    const result = await registerUser(email, password); // Call the function
-
+    e.preventDefault();
+    const result = await registerUser(email, password);
+    setMessage(result.message);
     if (result.success) {
-      setResponseMessage(result.message);
-    } else {
-      setResponseMessage(result.message);
+      // Handle successful registration (e.g., clear form, show success message)
     }
   };
 
   return (
-    <div className="App">
-      <h1>Register</h1>
+    <div>
+      <h2>Register</h2>
       <form onSubmit={handleRegister}>
-        <div>
-          <label>Email:</label>
-          <input 
-            type="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input 
-            type="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
-          />
-        </div>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
         <button type="submit">Register</button>
       </form>
-
-      {responseMessage && <p>{responseMessage}</p>}
+      {message && <p>{message}</p>}
     </div>
   );
 }
